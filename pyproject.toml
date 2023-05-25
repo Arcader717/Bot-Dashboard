@@ -11,6 +11,8 @@ replit = "^3.2.4"
 Flask = "^2.2.0"
 urllib3 = "^1.26.12"
 mod_wsgi-metrics = "^1.1.1"
+Quart-Discord = "^2.1.4"
+quart = "^0.18.4"
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"
