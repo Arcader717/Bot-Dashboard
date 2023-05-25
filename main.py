@@ -31,22 +31,35 @@ async def login():
 async def callback():
   try:
     await discord.callback()
-  except:
-    return redirect(url_for("login"))
+  except Exception:
+    pass
+    
+  return redirect(url_for("dashboard"))
 
   user = await discord.fetch_user()
   return f"{user.name}#{user.discriminator}"
 
 @app.route("/dashboard")
 async def dashboard():
+  if not await discord.authorized:
+    return redirect(url_for("login"))
   guild_count = await ipc_client.request("get_guild_count")
   guild_ids = await ipc_client.request("get_guild_ids")
+  
   user_guilds = await discord.fetch_guilds()
-  same_guilds = []
+  
+  guilds = []
   for guild in user_guilds:
-    if guild.id in guild_ids:
-      same_guilds.append(guild)
-  return await render_template("dashboard.html", guild_count = guild_count, matching = same_guilds[0].name)
+    if guild.permissions.administrator:
+      guild.class_color = "green-border" if guild.id in guild_ids else "red-border"
+      guilds.append(guild)
+
+  guilds.sort(key = lambda x: x.class_color == "red-border")
+  name = (await discord.fetch_user()).name
+  return await render_template("dashboard.html", guild_count = guild_count, guilds = guilds, username = name)
+
+#@app.route("/dashboard/<int:guild_id>")
+
 
 if __name__ == "__main__":
   app.run(debug=True)

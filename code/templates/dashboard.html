@@ -7,11 +7,16 @@
   <body>
     <header> Welcome to the Dashboard </header>
     <h2> The Bot is in: {{guild_count}} servers </h2>
+    <div class="picker">
+      
+    
     <h3> Common Guilds </h3>
     <ul>
       {% for guild in matching %}
       <li>{{ guild.name }}</li>
       {% endfor %}
     </ul>
+    </div>
+    
   </body>
 </html>
